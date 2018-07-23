@@ -8,10 +8,13 @@ const paddleHeight = 50;
 let p1XPaddlePos = 0;
 let p1YPaddlePos = 0;
 
-let ballX = 50;
-let ballSpeedX = 10;
-let ballY = canvas.height/2;
-let ballSpeedY = 10;
+let p2XPaddlePos = canvas.width - 5;
+let p2YPaddlePos = 0;
+
+let ballX = canvas.width / 2;
+let ballSpeedX = 5;
+let ballY = canvas.height / 2;
+let ballSpeedY = 5;
 const fps = 30;
 
 setInterval(function(){
@@ -32,7 +35,7 @@ function drawEverything(){
   context.fillRect(p1XPaddlePos, p1YPaddlePos, paddleThick, paddleHeight);
   // p2 paddle
   context.fillStyle = 'white';
-  context.fillRect((canvas.width - 20),(canvas.height / 2), paddleThick,paddleHeight)
+  context.fillRect(p2XPaddlePos, p2YPaddlePos, paddleThick, paddleHeight)
 }
 
 
@@ -49,15 +52,43 @@ function calculateMousePos(e){
   };
 }
 
+function ballReset(){
+  ballSpeedX = -ballSpeedX;
+  ballX = canvas.width / 2;
+  ballY = canvas.height / 2;
+}
+
+function handleComputerMove(){
+  const p2Center = paddleHeight - (paddleHeight / 2)
+  if(ballY > p2YPaddlePos + 30){
+    p2YPaddlePos += 6
+  } else if( ballY < p2YPaddlePos + 30){
+    p2YPaddlePos -= 6
+  }
+}
+
 
 function moveEverything(){
-  // ball
+  handleComputerMove();
+
   ballX = ballX + ballSpeedX;
-  if(ballX < 20) {
-    ballSpeedX = -ballSpeedX;
+  if(ballX <= 0) {
+    // handle p1 ball-movement
+    if(ballY > p1YPaddlePos && ballY < p1YPaddlePos + paddleHeight){
+      ballSpeedX = -ballSpeedX;
+    } else {
+      ballReset();
+    }
   }
-  if(ballX > (canvas.width - 40)) {
-    ballSpeedX = -ballSpeedX;
+  if(ballX >= canvas.width - 10) {
+    // handle p2 ball-movement
+    if(ballY > p2YPaddlePos && ballY < p2YPaddlePos + paddleHeight){
+      ballSpeedX = -ballSpeedX;
+    } else {
+      ballReset();
+    }
+    // ballSpeedX = -ballSpeedX;
+    // ballReset();
   }
 
   ballY = ballY - ballSpeedY;
