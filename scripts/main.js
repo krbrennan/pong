@@ -47,13 +47,10 @@ function drawEverything(){
   // p2 paddle
   context.fillStyle = 'white';
   context.fillRect(p2XPaddlePos, p2YPaddlePos, paddleThick, paddleHeight)
-
+  // Display Scores
   context.fillText(`Player1: ${p1Score}`, 100, 50);
   context.fillText(`Player2: ${p2Score}`, 650, 50);
-
 }
-
-
 
 
 function calculateMousePos(e){
@@ -71,26 +68,26 @@ function calculateMousePos(e){
 function ballReset(){
   ballSpeedX = -ballSpeedX;
   ballX = canvas.width / 2;
-  ballY = canvas.height / 2;
+  ballY = Math.floor(Math.random() * Math.floor(canvas.height))
 }
 
 function handleComputerMove(){
-  const p2Center = paddleHeight - (paddleHeight / 2)
+  let p2Center = paddleHeight - (paddleHeight / 2)
   if(ballY > p2YPaddlePos + 30){
-    p2YPaddlePos += 10
+    p2YPaddlePos += 20
   } else if( ballY < p2YPaddlePos - 30){
-    p2YPaddlePos -= 10
+    p2YPaddlePos -= 20
   }
 }
 
 
 function moveEverything(){
   handleComputerMove();
-
   ballX = ballX + ballSpeedX;
-  if(ballX <= 0) {
+
+  if(ballX <= paddleThick) {
     // handle p1 ball-movement
-    if(ballY > p1YPaddlePos && ballY < p1YPaddlePos + paddleHeight){
+    if((ballY >= (p1YPaddlePos - (paddleHeight / 2))) && (ballY <= (p1YPaddlePos + (paddleHeight / 2)))){
       p1Score += 1;
       ballSpeedX += 1;
       ballSpeedY += 1;
@@ -99,7 +96,7 @@ function moveEverything(){
       ballReset();
     }
   }
-  if(ballX >= canvas.width - 10) {
+  if(ballX >= canvas.width - paddleThick) {
     // handle p2 ball-movement
     if(ballY > p2YPaddlePos && ballY < p2YPaddlePos + paddleHeight){
       p2Score += 1;
